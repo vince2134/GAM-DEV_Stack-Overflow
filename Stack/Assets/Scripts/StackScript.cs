@@ -1,8 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StackScript : MonoBehaviour {
+
+    [SerializeField] private Text scoreText;
+
+    public Color32[] gameColors = new Color32[4];
+    public Material stackMat;
 
     private const float BOUNDS_SIZE = 3.5f;
     private const float STACK_MOVING_SPEED = 5.0f;
@@ -31,6 +37,10 @@ public class StackScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         stackIndex = transform.childCount - 1;
+
+        foreach (GameObject cube in stack) {
+            ColorMesh(cube.GetComponent<MeshFilter>().mesh);
+        }
 	}
 	
 	// Update is called once per frame
@@ -61,7 +71,9 @@ public class StackScript : MonoBehaviour {
         go.transform.localScale = scale;
         go.AddComponent<Rigidbody>();
 
+        go.GetComponent<MeshRenderer>().material = stackMat;
 
+        ColorMesh(go.GetComponent<MeshFilter>().mesh);
     }
 
     private void MoveTile() {
@@ -89,6 +101,8 @@ public class StackScript : MonoBehaviour {
         desiredPosition = (Vector3.down) * scoreCount;
         stack[stackIndex].transform.localPosition = new Vector3(0, scoreCount, 0);
         stack[stackIndex].transform.localScale = new Vector3(stackBounds.x, 1, stackBounds.y);
+
+        ColorMesh(stack[stackIndex].GetComponent<MeshFilter>().mesh);
     }
 
     private bool PlaceTile() {
@@ -161,7 +175,7 @@ public class StackScript : MonoBehaviour {
                                 , (t.position.z > 0)
                             ? t.position.z + (t.localScale.z / 2)
                             : t.position.z - (t.localScale.z / 2)),
-                    new Vector3(Mathf.Abs(deltaZ), 1, t.localScale.z)
+                    new Vector3(t.localScale.x, 1, Mathf.Abs(deltaZ))
                 );
 
                 t.localPosition = new Vector3(lastTilePosition.x, scoreCount, middle - (lastTilePosition.z / 2));
@@ -189,6 +203,32 @@ public class StackScript : MonoBehaviour {
         isMovingOnX = !isMovingOnX;
 
         return true;
+    }
+
+    private void ColorMesh (Mesh mesh) {
+
+        Vector3[] vertices = mesh.vertices;
+        Color32[] colors = new Color32[vertices.Length];
+        float f = Mathf.Sin(scoreCount * 0.25f);
+
+        for (int i = 0; i < vertices.Length; i++) {
+            colors[i] = Lerp4(gameColors[0], gameColors[1], gameColors[2], gameColors[3], f);
+        }
+
+        mesh.colors32 = colors;
+
+    }
+
+    private Color32 Lerp4(Color32 a, Color32 b, Color32 c, Color32 d, float t) {
+
+        if (t < 0.33f)
+            return Color.Lerp(a, b, t / 0.33f);
+        else if (t < 0.66f)
+            return Color.Lerp(b, c, (t - 0.33f) / 0.33f);
+        else
+            return Color.Lerp(c, d, (t - 0.66f) / 0.66f);
+
+
     }
 
     private void EndGame() {
