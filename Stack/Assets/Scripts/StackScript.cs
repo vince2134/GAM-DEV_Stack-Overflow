@@ -51,7 +51,9 @@ public class StackScript : MonoBehaviour {
             if(PlaceTile()) {
                 SpawnTile();
                 scoreCount++;
-                Debug.Log("mouse click");
+
+                scoreText.text = scoreCount.ToString();
+
             } else {
                 EndGame();
             }
