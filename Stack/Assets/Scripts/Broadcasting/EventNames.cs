@@ -12,6 +12,8 @@ public class EventNames {
 	public const string ON_INCREASE_LEVEL = "ON_INCREASE_LEVEL";
 
 	public const string ON_PICTURE_CLICKED = "ON_PICTURE_CLICKED";
+
+	public const string ON_REQUEST_RUBBLE = "ON_REQUEST_RUBBLE";
 }
 
 
