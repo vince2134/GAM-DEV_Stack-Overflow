@@ -46,7 +46,7 @@ public class StackScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if(Input.GetMouseButton(0)) {
+		if(Input.GetKeyDown(KeyCode.Space)) {
 
             if(PlaceTile()) {
                 SpawnTile();
@@ -68,14 +68,29 @@ public class StackScript : MonoBehaviour {
 
     private void CreateRubble(Vector3 pos, Vector3 scale) {
         
-        GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        go.transform.localPosition = pos;
-        go.transform.localScale = scale;
-        go.AddComponent<Rigidbody>();
+//        GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+//        go.transform.localPosition = pos;
+//        go.transform.localScale = scale;
+//        go.AddComponent<Rigidbody>();
+//
+//        go.GetComponent<MeshRenderer>().material = stackMat;
+//
+//        ColorMesh(go.GetComponent<MeshFilter>().mesh);
 
-        go.GetComponent<MeshRenderer>().material = stackMat;
+//		Vector3 rubblePos = new Vector3 ((t.position.x > 0) 
+//			? t.position.x + (t.localScale.x / 2) 
+//			: t.position.x - (t.localScale.x / 2) 
+//			, t.position.y
+//			, t.position.z);
+//
+//		Vector3 rubbleScale = new Vector3 (Mathf.Abs (deltaX), 1, t.localScale.z);
 
-        ColorMesh(go.GetComponent<MeshFilter>().mesh);
+		Parameters parameters = new Parameters ();
+		parameters.PutObjectExtra ("position", pos);
+		parameters.PutObjectExtra ("scale", scale);
+		parameters.PutObjectExtra ("material", stackMat);
+
+		EventBroadcaster.Instance.PostEvent (EventNames.ON_REQUEST_RUBBLE, parameters);
     }
 
     private void MoveTile() {
