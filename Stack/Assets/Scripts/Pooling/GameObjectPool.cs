@@ -44,8 +44,14 @@ public class GameObjectPool : MonoBehaviour {
 			poolableObject.OnActivate ();
 			return poolableObject;
 		} else {
-			Debug.LogError ("[GameObjectPool] No more poolable object available!");
-			return null;
+			APoolable poolableObject = this.usedObjects [0];
+			this.usedObjects.Add (poolableObject);
+			this.usedObjects.RemoveAt (0);
+
+			return poolableObject;
+			
+//			Debug.LogError ("[GameObjectPool] No more poolable object available!");
+//			return null;
 		}
 	}
 
