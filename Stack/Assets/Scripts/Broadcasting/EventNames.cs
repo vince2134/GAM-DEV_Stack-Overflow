@@ -14,6 +14,7 @@ public class EventNames {
 	public const string ON_PICTURE_CLICKED = "ON_PICTURE_CLICKED";
 
 	public const string ON_REQUEST_RUBBLE = "ON_REQUEST_RUBBLE";
+	public const string GAME_OVER = "GAME_OVER";
 }
 
 

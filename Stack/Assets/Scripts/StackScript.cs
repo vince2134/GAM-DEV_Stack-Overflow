@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class StackScript : MonoBehaviour {
 
     [SerializeField] private Text scoreText;
+	[SerializeField] private GameObject gameOverPanel;
 
     public Color32[] gameColors = new Color32[4];
     public Material stackMat;
@@ -40,7 +41,8 @@ public class StackScript : MonoBehaviour {
 
         foreach (GameObject cube in stack) {
             ColorMesh(cube.GetComponent<MeshFilter>().mesh);
-        }
+		}
+		gameOverPanel.SetActive (false);
 	}
 	
 	// Update is called once per frame
@@ -248,9 +250,12 @@ public class StackScript : MonoBehaviour {
 
     }
 
-    private void EndGame() {
+	private void EndGame() {
         Debug.Log("Lose");
         gameOver = true;
-        stack[stackIndex].AddComponent<Rigidbody>();
+		stack[stackIndex].AddComponent<Rigidbody>();
+		gameOverPanel.SetActive (true);
+		Debug.Log ("OBSERVER CALLED");
+		EventBroadcaster.Instance.PostEvent (EventNames.GAME_OVER);
     }
 }
