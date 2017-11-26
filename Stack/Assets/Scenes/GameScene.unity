@@ -5091,6 +5091,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 1488130540}
+  highScoreText: {fileID: 526776647}
   gameOverPanel: {fileID: 1523239347}
   baseSpeed: 2.5
   maxSpeed: 5

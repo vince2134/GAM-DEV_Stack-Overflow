@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class StackScript : MonoBehaviour {
 
     [SerializeField] private Text scoreText;
+    [SerializeField] private Text highScoreText;
 	[SerializeField] private GameObject gameOverPanel;
     [SerializeField] private float baseSpeed = 2.5f;
     [SerializeField] private float maxSpeed = 5f;
@@ -25,6 +26,8 @@ public class StackScript : MonoBehaviour {
     private const float STACK_BOUNDS_GAIN = 0.25f;
     private const int COMBO_START_GAIN = 3; 
 
+    private const string KEY_HIGH_SCORE = "HighScore";
+
     [SerializeField] private GameObject[] stack;
 
     private Vector2 stackBounds = new Vector2(BOUNDS_SIZE, BOUNDS_SIZE);
@@ -32,6 +35,7 @@ public class StackScript : MonoBehaviour {
     private int scoreCount = 0;
     private int stackIndex = 0;
     private int combo = 0;
+    private int highScore;
 
     private float tileTransition = 0.0f;
     private float tileSpeed = 2.5f;
@@ -53,6 +57,8 @@ public class StackScript : MonoBehaviour {
 		gameOverPanel.SetActive (false);
         this.currentSpeed = this.baseSpeed;
         this.currentErrorMargin = this.baseErrorMargin;
+
+        this.GetHighScore();
 	}
 	
 	// Update is called once per frame
@@ -277,7 +283,22 @@ public class StackScript : MonoBehaviour {
         gameOver = true;
 		stack[stackIndex].AddComponent<Rigidbody>();
 		gameOverPanel.SetActive (true);
+
+        this.SaveHighScore();
+
 		Debug.Log ("OBSERVER CALLED");
 		EventBroadcaster.Instance.PostEvent (EventNames.GAME_OVER);
+    }
+
+    private void GetHighScore() {
+        this.highScore = PlayerPrefs.GetInt(KEY_HIGH_SCORE, 0);
+        this.highScoreText.text = this.highScore.ToString();
+    }
+
+    private void SaveHighScore() {
+        if (this.scoreCount > this.highScore) {
+            PlayerPrefs.SetInt(KEY_HIGH_SCORE, this.scoreCount);
+            PlayerPrefs.Save();
+        }
     }
 }
