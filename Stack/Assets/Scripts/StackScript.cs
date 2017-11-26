@@ -72,6 +72,11 @@ public class StackScript : MonoBehaviour {
 
                 scoreText.text = scoreCount.ToString();
 
+                if (this.scoreCount > this.highScore) {
+                    this.highScore = this.scoreCount;
+                    this.highScoreText.text = this.highScore.ToString();
+                }
+
                 if (scoreCount % 10 == 0) {
 
                     if (this.currentSpeed < this.maxSpeed) {
@@ -296,7 +301,7 @@ public class StackScript : MonoBehaviour {
     }
 
     private void SaveHighScore() {
-        if (this.scoreCount > this.highScore) {
+        if (this.scoreCount > PlayerPrefs.GetInt(KEY_HIGH_SCORE, 0)) {
             PlayerPrefs.SetInt(KEY_HIGH_SCORE, this.scoreCount);
             PlayerPrefs.Save();
         }
