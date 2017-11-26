@@ -7,6 +7,14 @@ public class StackScript : MonoBehaviour {
 
     [SerializeField] private Text scoreText;
 	[SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private float baseSpeed = 2.5f;
+    [SerializeField] private float maxSpeed = 5f;
+    [SerializeField] private float speedMultiplier = 1.05f;
+    [SerializeField] private float currentSpeed;
+    [SerializeField] private float baseErrorMargin = 0.1f;
+    [SerializeField] private float maxErrorMargin = 0.5f;
+    [SerializeField] private float errorMarginMultiplier = 1.2f;
+    [SerializeField] private float currentErrorMargin;
 
     public Color32[] gameColors = new Color32[4];
     public Material stackMat;
@@ -43,6 +51,8 @@ public class StackScript : MonoBehaviour {
             ColorMesh(cube.GetComponent<MeshFilter>().mesh);
 		}
 		gameOverPanel.SetActive (false);
+        this.currentSpeed = this.baseSpeed;
+        this.currentErrorMargin = this.baseErrorMargin;
 	}
 	
 	// Update is called once per frame
@@ -56,6 +66,17 @@ public class StackScript : MonoBehaviour {
 
                 scoreText.text = scoreCount.ToString();
 
+                if (scoreCount % 10 == 0) {
+
+                    if (this.currentSpeed < this.maxSpeed) {
+                        this.currentSpeed *= this.speedMultiplier;
+                    }
+
+                    if (this.currentErrorMargin < this.maxErrorMargin) {
+                        this.currentErrorMargin *= this.errorMarginMultiplier;
+                    }
+                }
+
             } else {
                 EndGame();
             }
@@ -65,7 +86,7 @@ public class StackScript : MonoBehaviour {
         MoveTile();
 
         //Move the stack
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, STACK_MOVING_SPEED * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, STACK_MOVING_SPEED * Time.deltaTime);      
 	}
 
     private void CreateRubble(Vector3 pos, Vector3 scale) {
@@ -100,7 +121,8 @@ public class StackScript : MonoBehaviour {
         if (gameOver)
             return;
 
-        tileTransition += Time.deltaTime * tileSpeed;
+        tileTransition += Time.deltaTime * this.currentSpeed;
+        // tileTransition += Time.deltaTime * this.tileSpeed;
 
         if(isMovingOnX)
             stack[stackIndex].transform.localPosition = new Vector3(Mathf.Sin(tileTransition) * BOUNDS_SIZE, scoreCount, secondaryPosition);
@@ -130,7 +152,7 @@ public class StackScript : MonoBehaviour {
         if(isMovingOnX) {
             float deltaX = lastTilePosition.x - t.position.x;
 
-            if(Mathf.Abs(deltaX) > ERROR_MARGIN) {
+            if(Mathf.Abs(deltaX) > this.currentErrorMargin) {
                 
                 //CUT THE TILE
                 combo = 0;
@@ -175,7 +197,7 @@ public class StackScript : MonoBehaviour {
         else {
             float deltaZ = lastTilePosition.z - t.position.z;
 
-            if (Mathf.Abs(deltaZ) > ERROR_MARGIN)
+            if (Mathf.Abs(deltaZ) > this.currentErrorMargin)
             {
 
                 //CUT THE TILE
