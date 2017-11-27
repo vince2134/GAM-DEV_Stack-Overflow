@@ -14,8 +14,8 @@ public class View : MonoBehaviour {
 	[SerializeField] private bool asRootScreen = false;
 	[SerializeField] protected DOViewAnimation.EntranceType entranceType = DOViewAnimation.EntranceType.FROM_TOP;
 	[SerializeField] protected DOViewAnimation.ExitType exitType = DOViewAnimation.ExitType.TO_TOP;
+	[SerializeField] protected RectTransform rectTransform;
 
-	protected RectTransform rectTransform;
 	private IViewAnimation viewAnimation;
 
 	protected bool cancelable = true;
@@ -24,16 +24,12 @@ public class View : MonoBehaviour {
 
 	private List<Button> buttonList = null;
 
-	void Awake() {
-		this.rectTransform = this.GetComponent<RectTransform> (); //assume that it is a UI with rect transform.
-	}
-
 	public virtual void Show() {
 
 		if(this.viewAnimation == null) {
 			DOViewAnimation hoViewAnimation = new DOViewAnimation(this.rectTransform,this);
 			hoViewAnimation.SetAnimationType(this.entranceType, this.exitType);
-			
+
 			this.viewAnimation = hoViewAnimation;
 		}
 
@@ -119,7 +115,7 @@ public class View : MonoBehaviour {
 	{
 		//DCSoundManager.GetInstance().PlaySfx("Button", false);
 	}
-	
+
 	public string GetName() {
 		return this.gameObject.name;
 	}
@@ -131,11 +127,11 @@ public class View : MonoBehaviour {
 	public void DoNotDestroy() {
 		this.destroyable = false;
 	}
-	
+
 	public void MakeDestroyable() {
 		this.destroyable = true;
 	}
-	
+
 	public bool ShouldBeDestroyed() {
 		return this.destroyable;
 	}
@@ -156,27 +152,17 @@ public class View : MonoBehaviour {
 
 		DOViewAnimation hoViewAnimation = new DOViewAnimation(this.rectTransform,this);
 		hoViewAnimation.SetAnimationType(this.entranceType, this.exitType);
-		
+
 		this.viewAnimation = hoViewAnimation;
 	}
 
 	public void SetHOAnimation(DOViewAnimation.EntranceType entranceType, DOViewAnimation.ExitType exitType) {
 		this.viewAnimation = null;
-		this.entranceType = entranceType; 
-		this.exitType = exitType;
 
 		DOViewAnimation hoViewAnimation = new DOViewAnimation(this.rectTransform,this);
 		hoViewAnimation.SetAnimationType(this.entranceType, this.exitType);
-		
+
 		this.viewAnimation = hoViewAnimation;
-	}
-
-	public DOViewAnimation.EntranceType GetEntranceType() {
-		return this.entranceType;
-	}
-
-	public DOViewAnimation.ExitType GetExitType() {
-		return this.exitType;
 	}
 
 	#region View events

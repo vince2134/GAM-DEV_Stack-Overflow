@@ -241,6 +241,7 @@ MonoBehaviour:
   asRootScreen: 0
   entranceType: 0
   exitType: 0
+  rectTransform: {fileID: 224473507108202794}
 --- !u!114 &114434055137141246
 MonoBehaviour:
   m_ObjectHideFlags: 1
