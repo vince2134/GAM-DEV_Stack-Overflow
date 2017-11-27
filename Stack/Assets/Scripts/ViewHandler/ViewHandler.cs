@@ -97,7 +97,6 @@ public class ViewHandler : MonoBehaviour {
 			view = this.InitializeView(screenName);
 			this.activeViews.Add(view);
 		}
-
 		view.Show();
 		
 		if(view.IsRootScreen()) {
