@@ -15,6 +15,8 @@ public class EventNames {
 
 	public const string ON_REQUEST_RUBBLE = "ON_REQUEST_RUBBLE";
 	public const string GAME_OVER = "GAME_OVER";
+	public const string PAUSE = "PAUSE";
+	public const string RESUME = "RESUME";
 }
 
 

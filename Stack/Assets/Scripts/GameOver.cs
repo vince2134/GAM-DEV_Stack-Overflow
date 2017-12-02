@@ -33,7 +33,7 @@ public class GameOver : MonoBehaviour {
 
 	public void onClickQuit(){
 
-		Application.Quit();
+		//SceneManager.LoadScene (SceneNames.MAIN_MENU_SCENE);	
 	}
 
 }
