@@ -8,7 +8,8 @@ public class StackScript : MonoBehaviour {
     [SerializeField] private Text scoreText;
     [SerializeField] private Text highScoreText;
 	[SerializeField] private GameObject gameOverPanel;
-    [SerializeField] private float baseSpeed = 2.5f;
+	[SerializeField] private GameObject pausePanel;
+	[SerializeField] private float baseSpeed = 2.5f;
     [SerializeField] private float maxSpeed = 5f;
     [SerializeField] private float speedMultiplier = 1.05f;
     [SerializeField] private float currentSpeed;
@@ -43,6 +44,7 @@ public class StackScript : MonoBehaviour {
 
     private bool isMovingOnX = true;
     private bool gameOver = false;
+	private bool pause = true;
 
     private Vector3 desiredPosition;
     private Vector3 lastTilePosition;
@@ -55,49 +57,53 @@ public class StackScript : MonoBehaviour {
             ColorMesh(cube.GetComponent<MeshFilter>().mesh);
 		}
 		gameOverPanel.SetActive (false);
-        this.currentSpeed = this.baseSpeed;
+		pausePanel.SetActive (false);
+		this.currentSpeed = this.baseSpeed;
         this.currentErrorMargin = this.baseErrorMargin;
 
         this.GetHighScore();
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-		if(Input.GetKeyDown(KeyCode.Space)) {
+		if (pause) {
+			if(Input.GetKeyDown(KeyCode.Space)) {
 
-            if(PlaceTile()) {
-                SpawnTile();
-                scoreCount++;
+				if(PlaceTile()) {
+					SpawnTile();
+					scoreCount++;
 
-                scoreText.text = scoreCount.ToString();
+					scoreText.text = scoreCount.ToString();
 
-                if (this.scoreCount > this.highScore) {
-                    this.highScore = this.scoreCount;
-                    this.highScoreText.text = this.highScore.ToString();
-                }
+					if (this.scoreCount > this.highScore) {
+						this.highScore = this.scoreCount;
+						this.highScoreText.text = this.highScore.ToString();
+					}
 
-                if (scoreCount % 10 == 0) {
+					if (scoreCount % 10 == 0) {
 
-                    if (this.currentSpeed < this.maxSpeed) {
-                        this.currentSpeed *= this.speedMultiplier;
-                    }
+						if (this.currentSpeed < this.maxSpeed) {
+							this.currentSpeed *= this.speedMultiplier;
+						}
 
-                    if (this.currentErrorMargin < this.maxErrorMargin) {
-                        this.currentErrorMargin *= this.errorMarginMultiplier;
-                    }
-                }
+						if (this.currentErrorMargin < this.maxErrorMargin) {
+							this.currentErrorMargin *= this.errorMarginMultiplier;
+						}
+					}
 
-            } else {
-                EndGame();
-            }
+				} else {
+					EndGame();
+				}
 
-        }
+			}
 
-        MoveTile();
+			MoveTile();
 
-        //Move the stack
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, STACK_MOVING_SPEED * Time.deltaTime);      
+			//Move the stack
+			transform.position = Vector3.Lerp(transform.position, desiredPosition, STACK_MOVING_SPEED * Time.deltaTime);   
+		}   
 	}
 
     private void CreateRubble(Vector3 pos, Vector3 scale) {
@@ -282,6 +288,20 @@ public class StackScript : MonoBehaviour {
 
 
     }
+
+	public void Pause() {
+		Debug.Log("Pause");
+		this.pause = false;
+		pausePanel.SetActive (true);
+		EventBroadcaster.Instance.PostEvent (EventNames.PAUSE);
+	}
+
+	public void Resume() {
+		Debug.Log("Resume");
+		EventBroadcaster.Instance.PostEvent (EventNames.RESUME);
+		this.pause = true;
+		pausePanel.SetActive (false);
+	}
 
 	private void EndGame() {
         Debug.Log("Lose");
