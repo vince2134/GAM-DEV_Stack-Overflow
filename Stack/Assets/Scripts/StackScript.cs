@@ -17,6 +17,7 @@ public class StackScript : MonoBehaviour {
     [SerializeField] private float maxErrorMargin = 0.5f;
     [SerializeField] private float errorMarginMultiplier = 1.2f;
     [SerializeField] private float currentErrorMargin;
+	[SerializeField] private AudioClip[] audioClip;
 
     public Color32[] gameColors = new Color32[4];
     public Material stackMat;
@@ -130,6 +131,8 @@ public class StackScript : MonoBehaviour {
 		parameters.PutObjectExtra ("scale", scale);
 		parameters.PutObjectExtra ("material", stackMat);
 
+		PlaySound (1);
+
 		EventBroadcaster.Instance.PostEvent (EventNames.ON_REQUEST_RUBBLE, parameters);
     }
 
@@ -165,6 +168,9 @@ public class StackScript : MonoBehaviour {
 
     private bool PlaceTile() {
         Transform t = stack[stackIndex].transform;
+
+		if(!gameOver)
+			PlaySound (0);
 
         if(isMovingOnX) {
             float deltaX = lastTilePosition.x - t.position.x;
@@ -326,4 +332,9 @@ public class StackScript : MonoBehaviour {
             PlayerPrefs.Save();
         }
     }
+
+	private void PlaySound(int clip) {
+		GetComponent<AudioSource>().clip = audioClip [clip];
+		GetComponent<AudioSource>().Play ();
+	}
 }
