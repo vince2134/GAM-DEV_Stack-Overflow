@@ -30,6 +30,6 @@ public class Pause : MonoBehaviour {
 
 	public void onClickQuit(){
 
-		//SceneManager.LoadScene (SceneNames.MAIN_MENU_SCENE);	
+		SceneManager.LoadScene (SceneNames.MAIN_MENU_SCENE);	
 	}
 }

@@ -71,7 +71,7 @@ public class StackScript : MonoBehaviour {
 
 		if (pause) {
 			if(Input.GetKeyDown(KeyCode.Space)) {
-
+            //if (Input.GetMouseButton(0))
 				if(PlaceTile()) {
 					SpawnTile();
 					scoreCount++;
